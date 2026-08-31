@@ -34,7 +34,7 @@ export class CategoriasService {
     return categoria;
   }
 
-  async crear(dto: CreateCategoriasDto) {
+  async crear(dto: CreateCategoriasDto, idUsuario: string) {
     const [repetida] = await this.db
       .select()
       .from(categorias)
@@ -44,7 +44,7 @@ export class CategoriasService {
       throw new ConflictException(`Ya existe "${dto.nombre}"`);
     }
 
-    const [nueva] = await this.db.insert(categorias).values(dto).returning();
+    const [nueva] = await this.db.insert(categorias).values({ ...dto, usuarioId: idUsuario,}).returning();
     return nueva;
   }
 

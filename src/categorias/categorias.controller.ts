@@ -6,11 +6,15 @@ import {
   Body,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoriasService } from './categorias.service';
 import { CreateCategoriasDto } from './dto/create-categorias.dto';
 import { UpdateCategoriasDto } from './dto/update-categorias.dto';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { Usuario } from 'src/auth/decorators/usuario.decorator';
 
+@UseGuards(AuthGuard)
 @Controller('categorias')
 export class CategoriasController {
   constructor(private readonly categoriasService: CategoriasService) {}
@@ -26,8 +30,8 @@ export class CategoriasController {
   }
 
   @Post()
-  crear(@Body() dto: CreateCategoriasDto) {
-    return this.categoriasService.crear(dto);
+  crear(@Body() dto: CreateCategoriasDto, @Usuario('sub') idUsuario: string) {
+    return this.categoriasService.crear(dto, idUsuario);
   }
 
   @Patch(':id')
