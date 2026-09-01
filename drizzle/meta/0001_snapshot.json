@@ -1,6 +1,6 @@
 {
-  "id": "c68a88dd-0f07-4e71-a304-aea9c3def114",
-  "prevId": "f85b0910-0ad5-4311-88a9-cda74d87070f",
+  "id": "bc54accc-1b5a-4422-aa9b-15c9a835b542",
+  "prevId": "9c60c2ce-f9ae-424e-9bb9-10f16b2b1d5b",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -21,6 +21,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "usuario_id": {
+          "name": "usuario_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -30,7 +36,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "categorias_usuario_id_usuarios_id_fk": {
+          "name": "categorias_usuario_id_usuarios_id_fk",
+          "tableFrom": "categorias",
+          "tableTo": "usuarios",
+          "columnsFrom": [
+            "usuario_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "categorias_nombre_unique": {
@@ -119,6 +139,60 @@
           "nullsNotDistinct": false,
           "columns": [
             "titulo"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.usuarios": {
+      "name": "usuarios",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "creado_en": {
+          "name": "creado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "actualizado_en": {
+          "name": "actualizado_en",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "usuarios_email_unique": {
+          "name": "usuarios_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
           ]
         }
       },

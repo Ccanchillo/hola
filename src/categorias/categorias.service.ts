@@ -9,6 +9,7 @@ import { categorias } from '../drizzle/Schema/categorias';
 import { tasks } from '../drizzle/Schema/tasks';
 import { CreateCategoriasDto } from './dto/create-categorias.dto';
 import { UpdateCategoriasDto } from './dto/update-categorias.dto';
+import { usuarios } from 'src/drizzle/Schema/usuarios';
 
 @Injectable()
 export class CategoriasService {
@@ -34,7 +35,7 @@ export class CategoriasService {
     return categoria;
   }
 
-  async crear(dto: CreateCategoriasDto) {
+  async crear(dto: CreateCategoriasDto, idUsuario: string) {
     const [repetida] = await this.db
       .select()
       .from(categorias)
@@ -44,7 +45,7 @@ export class CategoriasService {
       throw new ConflictException(`Ya existe "${dto.nombre}"`);
     }
 
-    const [nueva] = await this.db.insert(categorias).values(dto).returning();
+    const [nueva] = await this.db.insert(categorias).values({...dto, usuarioId: idUsuario,}).returning();
     return nueva;
   }
 

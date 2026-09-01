@@ -5,15 +5,29 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1786736074805,
-      "tag": "0000_ordinary_iceman",
+      "when": 1788158268639,
+      "tag": "0000_curious_sprite",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1786743843095,
-      "tag": "0001_bored_pretty_boy",
+      "when": 1788160783513,
+      "tag": "0001_elite_onslaught",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788242895390,
+      "tag": "0002_worthless_wilson_fisk",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788242976492,
+      "tag": "0003_lively_risque",
       "breakpoints": true
     }
   ]

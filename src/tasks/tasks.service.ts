@@ -24,10 +24,13 @@ export class TasksService {
   //   { id: 2, titulo: 'Hacer ejercicio', hecha: true },
   // ];
 
-  obtenerTodas() {
-    return this.db.select().from(tasks).where(isNull(tasks.deletedAt));
+  obtenerTodas(idUsuario: string) {
+    return this.db
+      .select()
+      .from(tasks)
+      .where(and(eq(tasks.usuarioId, idUsuario), isNull(tasks.deletedAt)));
   }
-
+  
   async obtenerUna(id: string) {
     const [task] = await this.db.select().from(tasks).where(and(eq(tasks.id, id), isNull(tasks.deletedAt)));
 
@@ -84,14 +87,31 @@ export class TasksService {
   //   return nueva;
   // }
 
-  async crear(dto: CreateTasksDTO) {
-    const [repetida] = await this.db.select().from(tasks).where(and(ilike(tasks.titulo, dto.titulo), isNull(tasks.deletedAt)));
+async crear(dto: CreateTasksDTO, idUsuario: string) {
+    const [repetida] = await this.db
+      .select()
+      .from(tasks)
+      .where(
+        and(
+          ilike(tasks.titulo, dto.titulo),
+          isNull(tasks.deletedAt),
+          eq(tasks.usuarioId, idUsuario) // Permite que otros usuarios usen el mismo título
+        )
+      );
 
     if (repetida) {
       // Yo no escribo el 409 el ConflictException lo hace por mi
       throw new ConflictException(`Ya existe "${dto.titulo}"`);
     }
-    const [nueva] = await this.db.insert(tasks).values(dto).returning();
+
+    const [nueva] = await this.db
+      .insert(tasks)
+      .values({
+        ...dto,
+        usuarioId: idUsuario, // Vinculamos la tarea al creador
+      })
+      .returning();
+      
     return nueva;
   }
 

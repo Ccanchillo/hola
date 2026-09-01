@@ -7,21 +7,24 @@ import {
   Body,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTasksDTO } from './dto/create-tasks.dto';
 import { QueryTaskDto } from './dto/query-tasks.dto';
 import { UpdateTasksDto } from './dto/update-tasks.dto';
 import { LocaleDirContext } from '@react-navigation/native';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { Usuario } from 'src/auth/decorators/usuario.decorator';
 
-
+@UseGuards(AuthGuard)
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  @Get()
-  obtenerTodas() {
-    return this.tasksService.obtenerTodas();
+@Get()
+  obtenerTodas(@Usuario('sub') idUsuario: string) {
+    return this.tasksService.obtenerTodas(idUsuario);
   }
   // tasks/${loque sea}
 
@@ -56,9 +59,12 @@ export class TasksController {
   //   return this.tasksService.crear(body.titulo);
   // }
 
-  @Post()
-  crear(@Body() dto: CreateTasksDTO) {
-    return this.tasksService.crear(dto);
+@Post()
+  crear(
+    @Body() dto: CreateTasksDTO,
+    @Usuario('sub') idUsuario: string
+  ) {
+    return this.tasksService.crear(dto, idUsuario);
   }
 
 //   @Patch(':id/hecha')
