@@ -472,3 +472,65 @@ export const usuariosRelations = relations(usuarios, ({ many }) => ({
   categorias: many(categorias),
 }));
 ```
+src/auth/auth.service.ts
+```
+const payload = { 
+      sub: usuario.id, 
+      email: usuario.email, 
+      rol: usuario.rol // Inyectamos el rol aquí
+    };
+```
+src/auth/decorators/roles.decorator.ts
+```
+import { SetMetadata } from '@nestjs/common';
+
+export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
+```
+src/auth/guard/roles.guard.ts
+```
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const rolesRequeridos = this.reflector.getAllAndOverride<string[]>('roles', [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (!rolesRequeridos) {
+      return true; // Acceso libre si no hay decorador @Roles
+    }
+
+    const peticion = context.switchToHttp().getRequest();
+    const usuario = peticion.usuario; // Extraído previamente por el AuthGuard
+
+    if (!usuario || !rolesRequeridos.includes(usuario.rol)) {
+      throw new ForbiddenException('Privilegios insuficientes (Requiere rol superior)');
+    }
+
+    return true;
+  }
+}
+```
+src/categorias/categorias.controller.ts
+```
+import { Controller, Delete, UseGuards, Param } from '@nestjs/common';
+import { AuthGuard } from '../auth/guard/auth.guard';
+import { RolesGuard } from '../auth/guard/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+
+@UseGuards(AuthGuard, RolesGuard) // El orden es vital: primero valida token, luego rol
+@Controller('categorias')
+export class CategoriasController {
+  
+  @Delete(':id')
+  @Roles('ADMIN') // Solo usuarios con rol ADMIN pueden ejecutar esto
+  eliminar(@Param('id') id: string) {
+    // Lógica del servicio
+  }
+}
+```

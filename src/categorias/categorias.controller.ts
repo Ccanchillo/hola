@@ -13,7 +13,9 @@ import { CreateCategoriasDto } from './dto/create-categorias.dto';
 import { UpdateCategoriasDto } from './dto/update-categorias.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { Usuario } from '../auth/decorators/usuario.decorator';
-@UseGuards(AuthGuard)
+import { RolesGuard } from 'src/auth/guard/reoles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+@UseGuards(AuthGuard, RolesGuard)
 @Controller('categorias')
 export class CategoriasController {
   constructor(private readonly categoriasService: CategoriasService) {}
@@ -39,6 +41,7 @@ export class CategoriasController {
   }
 
   @Delete(':id')
+  @Roles('ADMIN')
   eliminar(@Param('id') id: string) {
     return this.categoriasService.eliminar(id);
   }

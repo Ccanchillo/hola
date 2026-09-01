@@ -1,0 +1,1 @@
+ALTER TABLE "usuarios" ALTER COLUMN "rol" SET NOT NULL;

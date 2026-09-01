@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { DrizzleService } from '../drizzle/drizzle.service';
 import { usuarios } from '../drizzle/Schema/usuarios';
-import * as bcrypt from 'bcrypt';
+import { CrearUsuarioDto } from './dto/create-usuario.dto';
+import * as bcrypt from 'bcrypt'; // O 'bcryptjs' si aplicaste el cambio anterior
 
 @Injectable()
 export class UsuariosService {
@@ -12,7 +13,7 @@ export class UsuariosService {
     return this.drizzleService.getDB();
   }
 
-  async crear(crearUsuarioDto: any) {
+  async crear(crearUsuarioDto: CrearUsuarioDto) {
     const saltRounds = 10;
     const passwordHasheada = await bcrypt.hash(crearUsuarioDto.password, saltRounds);
 
