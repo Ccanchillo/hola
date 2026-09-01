@@ -15,6 +15,20 @@
       "when": 1788200711116,
       "tag": "0001_parched_taskmaster",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788293007492,
+      "tag": "0002_mature_storm",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788293173802,
+      "tag": "0003_keen_silver_sable",
+      "breakpoints": true
     }
   ]
 }

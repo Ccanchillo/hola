@@ -1,0 +1,1 @@
+ALTER TABLE "usuarios" ADD COLUMN "rol" varchar(50) DEFAULT 'USUARIO';

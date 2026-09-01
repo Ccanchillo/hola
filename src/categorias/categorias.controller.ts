@@ -13,8 +13,11 @@ import { CreateCategoriasDto } from './dto/create-categorias.dto';
 import { UpdateCategoriasDto } from './dto/update-categorias.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { Usuario } from 'src/auth/decorators/usuario.decorator';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
+@Roles('ADMIN', 'otrapersona')
 @Controller('categorias')
 export class CategoriasController {
   constructor(private readonly categoriasService: CategoriasService) {}
