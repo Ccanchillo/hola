@@ -534,3 +534,27 @@ export class CategoriasController {
   }
 }
 ```
+
+# AHORA SI EL VERDADERO ROL
+src/drizzle/Schema/roles.ts
+```
+import { pgTable, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { usuarios } from './usuarios'; // Importamos la tabla usuarios
+
+export const roles = pgTable('roles', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  nombre: varchar('nombre', { length: 50 }).notNull().unique(), // Ej: 'ADMIN', 'MODERADOR'
+  descripcion: varchar('descripcion', { length: 255 }),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const rolesRelations = relations(roles, ({ many }) => ({
+  usuarios: many(usuarios),
+}));
+```
+src/drizzle/Schema/usuarios.ts
+```
+// Elimina la columna de texto estático anterior
+rolId: uuid('rol_id').references(() => roles.id).notNull(),
+```
